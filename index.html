@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Món Quà Bất Ngờ 20/10 - Dành Tặng Các Cô Gái Lớp 12/4</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Pacifico&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            rose: '#E11D48',
+                            gold: '#D97706',
+                            tulip: '#EC4899',
+                            sunflower: '#F59E0B',
+                            lotus: '#F43F5E'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Pacifico', 'cursive'],
+                        sans: ['"Be Vietnam Pro"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: linear-gradient(135deg, #2D0B1E 0%, #1A0B2E 50%, #0F051D 100%);
+            min-height: 100vh;
+            color: #FFF;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Styling */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-button {
+            background: linear-gradient(135deg, rgba(225, 29, 72, 0.9), rgba(244, 63, 94, 0.7));
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(225, 29, 72, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .glass-button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(225, 29, 72, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+        }
+
+        .glass-button:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        /* Falling Petals Background Canvas */
+        #falling-petals-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Gold Shimmer Text Effect */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFF 0%, #FFE29F 40%, #FFA99F 70%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        /* Khu vườn sáng dần khi mở bất ngờ */
+        @keyframes gardenIn { from { filter: brightness(0.55) saturate(0.5); transform: scale(1.06); } to { filter: none; transform: none; } }
+        .garden-reveal { animation: gardenIn 1.8s cubic-bezier(.2,.7,.2,1) both; }
+        @media (prefers-reduced-motion: reduce) { .garden-reveal { animation: none; } }
+    </style>
+</head>
+<body class="relative flex flex-col min-h-screen justify-between items-center p-3 sm:p-6 antialiased">
+
+    <!-- Ambient Floating Petals Canvas -->
+    <canvas id="falling-petals-canvas"></canvas>
+
+    <!-- Header Section -->
+    <header class="relative z-10 text-center my-4 sm:my-6 max-w-xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-3">
+            <i data-lucide="sparkles" class="w-4 h-4 text-amber-300 animate-spin" style="animation-duration: 8s;"></i>
+            <span class="text-xs font-semibold tracking-wider uppercase text-pink-200">Kỷ Niệm 20/10 - Lớp 12/4</span>
+        </div>
+        <h1 class="font-serif text-3xl sm:text-5xl font-bold gold-gradient-text drop-shadow-lg leading-tight">
+            Món Quà Bất Ngờ 20/10
+        </h1>
+        <p class="text-sm sm:text-base text-pink-100/80 mt-2 font-light">
+            Gửi tặng những bông hoa rực rỡ nhất cho các cô gái tuyệt vời!
+        </p>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 w-full max-w-4xl mx-auto flex-1 flex flex-col justify-center items-center">
+        
+        <!-- STEP 1: FORM INPUT & CREATOR SECTION -->
+        <div id="step-setup" class="w-full max-w-lg glass-panel rounded-3xl p-5 sm:p-8 transition-all duration-500">
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <i data-lucide="wand-2" class="text-pink-400"></i>
+                1. Thiết kế Thiệp Hoa Bất Ngờ
+            </h2>
+
+            <!-- Name Input -->
+            <div class="mb-6">
+                <label for="recipient-name" class="block text-xs font-semibold uppercase tracking-wider text-pink-200 mb-2">
+                    Tên Cô Gái Của Lớp 12/4 <span class="text-rose-400">*</span>
+                </label>
+                <div class="relative">
+                    <input type="text" id="recipient-name" placeholder="Ví dụ: Thu Trang, Thu Hà..." 
+                        class="w-full bg-black/30 border border-white/20 rounded-2xl px-4 py-3.5 pl-11 text-white placeholder-pink-200/40 focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-400/30 transition-all font-medium">
+                    <i data-lucide="user" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-pink-300/60"></i>
+                </div>
+            </div>
+
+            <!-- Avatar Upload & Interactive Cropper Preview -->
+            <div class="mb-6">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-pink-200 mb-2">
+                    Ảnh Chân Dung (Dùng làm nhụy cho các bông hoa)
+                </label>
+                <div class="flex flex-col sm:flex-row items-center gap-4 bg-black/20 p-4 rounded-2xl border border-white/10">
+                    <div class="relative w-28 h-28 rounded-full border-2 border-amber-300/60 shadow-lg overflow-hidden bg-white/5 flex items-center justify-center shrink-0 group">
+                        <canvas id="avatar-cropper-canvas" class="w-full h-full object-cover cursor-grab active:cursor-grabbing"></canvas>
+                        <div id="avatar-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-2 text-pink-200/60 pointer-events-none">
+                            <i data-lucide="image" class="w-6 h-6 mb-1"></i>
+                            <span class="text-[10px]">Tải ảnh lên</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 text-center sm:text-left">
+                        <input type="file" id="avatar-upload" accept="image/*" class="hidden">
+                        <button type="button" onclick="document.getElementById('avatar-upload').click()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-semibold border border-white/20 transition-all mb-2 inline-flex items-center gap-2">
+                            <i data-lucide="upload" class="w-4 h-4"></i> Chọn ảnh từ máy
+                        </button>
+                        <p class="text-[11px] text-pink-200/60 leading-relaxed">
+                            💡 <strong>Mẹo Designer:</strong> Kéo rê chuột/tay để di chuyển vị trí, dùng thanh cuộn/slider bên dưới để Phóng to/Thu nhỏ ảnh chuẩn góc mặt!
+                        </p>
+                        <!-- Zoom Control Slider -->
+                        <div class="mt-2 flex items-center gap-2">
+                            <i data-lucide="zoom-out" class="w-3.5 h-3.5 text-pink-300/70"></i>
+                            <input type="range" id="zoom-slider" min="0.5" max="3" step="0.05" value="1" disabled class="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-rose-500">
+                            <i data-lucide="zoom-in" class="w-3.5 h-3.5 text-pink-300/70"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="button" id="btn-create" onclick="triggerUnboxing()" class="w-full glass-button py-4 rounded-2xl font-bold text-lg text-white flex items-center justify-center gap-2 group">
+                <span>Mở Bất Ngờ</span>
+                <i data-lucide="gift" class="w-5 h-5 group-hover:rotate-12 transition-transform"></i>
+            </button>
+        </div>
+
+        <!-- STEP 2: ARTWORK DISPLAY & REVEAL SECTION (Hidden by default) -->
+        <div id="step-result" class="hidden w-full flex-col items-center transition-all duration-700 opacity-0 scale-95">
+            
+            <!-- Canvas Container -->
+            <div class="relative group my-4 max-w-[500px] w-full aspect-square rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-300/40">
+                <canvas id="art-canvas" width="1080" height="1080" class="w-full h-full object-contain bg-slate-950"></canvas>
+            </div>
+
+            <!-- Greeting Card & Action Controls -->
+            <div class="w-full max-w-xl glass-panel rounded-3xl p-6 sm:p-8 mt-2 text-center">
+                <h3 class="font-serif text-2xl sm:text-3xl font-bold gold-gradient-text mb-4" id="greeting-title">
+                    Gửi tặng [Tên] 💐
+                </h3>
+                
+                <p id="greeting-body" class="text-sm sm:text-base text-pink-50 leading-relaxed font-light mb-6 bg-black/20 p-4 rounded-2xl border border-white/10 italic">
+                    "Chúc mừng ngày 20/10 các cô gái của lớp 12/4 💐 Mới đó mà tụi mình đã rời mái trường, mỗi người một hướng đi riêng. Mong các bạn luôn khỏe mạnh, xinh đẹp, tự tin theo đuổi ước mơ và phải thật rực rỡ nhé. Hẹn một ngày không xa gặp lại."
+                </p>
+
+                <!-- Actions Button Row -->
+                <div class="flex flex-wrap sm:flex-nowrap gap-3 justify-center">
+                    <button onclick="downloadArtwork()" class="flex-1 glass-button py-3.5 px-5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>Tải Ảnh 1080p</span>
+                    </button>
+
+                    <button onclick="shareArtwork()" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 py-3.5 px-5 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 transition-all">
+                        <i data-lucide="share-2" class="w-4 h-4"></i>
+                        <span>Chia Sẻ</span>
+                    </button>
+
+                    <button onclick="resetSetup()" class="bg-black/30 hover:bg-black/50 border border-white/10 py-3.5 px-4 rounded-2xl text-sm font-semibold flex items-center justify-center transition-all text-pink-200" title="Tạo thiệp mới">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 text-center py-4 text-xs text-pink-200/50">
+        <p>© 20/10 Special Edition • Crafted with ❤️ for Class 12/4</p>
+    </footer>
+
+    <!-- Custom Notification Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 glass-panel px-6 py-3 rounded-full text-sm text-white font-medium shadow-2xl opacity-0 transition-all pointer-events-none flex items-center gap-2">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-message">Thông báo</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC & FLORAL ARTWORK ENGINE -->
+    <script>
+        // Global State & Config
+        const state = {
+            recipientName: '',
+            avatarImg: null,
+            cropX: 0,
+            cropY: 0,
+            cropScale: 1,
+            isDragging: false,
+            startX: 0,
+            startY: 0
+        };
+
+        const FLOWER_THEME = {
+            primary: '#E11D48',
+            secondary: '#FB7185',
+            accent: '#FFE4E6',
+            petals: ['#E11D48', '#F43F5E', '#FB7185', '#BE123C', '#9F1239'],
+            leafColor: '#15803D'
+        };
+
+        lucide.createIcons();
+
+        const cropperCanvas = document.getElementById('avatar-cropper-canvas');
+        const cropperCtx = cropperCanvas.getContext('2d');
+        const artCanvas = document.getElementById('art-canvas');
+        const artCtx = artCanvas.getContext('2d');
+        const zoomSlider = document.getElementById('zoom-slider');
+
+        cropperCanvas.width = 300;
+        cropperCanvas.height = 300;
+
+        initFallingPetals();
+
+        document.getElementById('avatar-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    state.avatarImg = img;
+                    state.cropX = 0;
+                    state.cropY = 0;
+                    state.cropScale = 1;
+                    zoomSlider.value = 1;
+                    zoomSlider.disabled = false;
+                    document.getElementById('avatar-placeholder').classList.add('hidden');
+                    renderAvatarCropper();
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        zoomSlider.addEventListener('input', function() {
+            state.cropScale = parseFloat(this.value);
+            renderAvatarCropper();
+        });
+
+        function setupCropperInteractions() {
+            const startDrag = (x, y) => {
+                if (!state.avatarImg) return;
+                state.isDragging = true;
+                state.startX = x - state.cropX;
+                state.startY = y - state.cropY;
+            };
+
+            const moveDrag = (x, y) => {
+                if (!state.isDragging) return;
+                state.cropX = x - state.startX;
+                state.cropY = y - state.startY;
+                renderAvatarCropper();
+            };
+
+            const stopDrag = () => {
+                state.isDragging = false;
+            };
+
+            cropperCanvas.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+            window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+            window.addEventListener('mouseup', stopDrag);
+
+            cropperCanvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    startDrag(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            });
+            window.addEventListener('touchmove', (e) => {
+                if (state.isDragging && e.touches.length === 1) {
+                    moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            });
+            window.addEventListener('touchend', stopDrag);
+
+            cropperCanvas.addEventListener('wheel', (e) => {
+                if (!state.avatarImg) return;
+                e.preventDefault();
+                let newZoom = state.cropScale + (e.deltaY < 0 ? 0.1 : -0.1);
+                newZoom = Math.min(Math.max(newZoom, 0.5), 3);
+                state.cropScale = newZoom;
+                zoomSlider.value = newZoom;
+                renderAvatarCropper();
+            }, { passive: false });
+        }
+        setupCropperInteractions();
+
+        function renderAvatarCropper() {
+            const w = cropperCanvas.width;
+            const h = cropperCanvas.height;
+            cropperCtx.clearRect(0, 0, w, h);
+
+            if (!state.avatarImg) return;
+
+            cropperCtx.save();
+            cropperCtx.beginPath();
+            cropperCtx.arc(w/2, h/2, w/2 - 4, 0, Math.PI * 2);
+            cropperCtx.clip();
+
+            cropperCtx.fillStyle = '#1A0B2E';
+            cropperCtx.fillRect(0, 0, w, h);
+
+            const imgAspect = state.avatarImg.width / state.avatarImg.height;
+            let drawW = w * state.cropScale;
+            let drawH = (w / imgAspect) * state.cropScale;
+
+            const drawX = (w - drawW) / 2 + state.cropX;
+            const drawY = (h - drawH) / 2 + state.cropY;
+
+            cropperCtx.drawImage(state.avatarImg, drawX, drawY, drawW, drawH);
+            cropperCtx.restore();
+
+            cropperCtx.strokeStyle = '#FBBF24';
+            cropperCtx.lineWidth = 4;
+            cropperCtx.beginPath();
+            cropperCtx.arc(w/2, h/2, w/2 - 4, 0, Math.PI * 2);
+            cropperCtx.stroke();
+        }
+
+        function triggerUnboxing() {
+            const nameInput = document.getElementById('recipient-name').value.trim();
+            if (!nameInput) {
+                showToast('Vui lòng nhập tên người nhận!');
+                return;
+            }
+
+            state.recipientName = nameInput;
+
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: FLOWER_THEME.petals
+            });
+
+            const setupStep = document.getElementById('step-setup');
+            const resultStep = document.getElementById('step-result');
+
+            setupStep.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                setupStep.classList.add('hidden');
+                
+                document.getElementById('greeting-title').textContent = `Gửi tặng ${state.recipientName} 💐`;
+                document.getElementById('greeting-body').textContent = 
+                    `"Chúc mừng ngày 20/10 ${state.recipientName} cùng các cô gái của lớp 12/4 💐 Mới đó mà tụi mình đã rời mái trường, mỗi người một hướng đi riêng. Mong các bạn luôn khỏe mạnh, xinh đẹp, tự tin theo đuổi ước mơ và phải thật rực rỡ nhé. Hẹn một ngày không xa gặp lại."`;
+
+                renderMasterArtwork();
+                artCanvas.classList.remove('garden-reveal'); void artCanvas.offsetWidth; artCanvas.classList.add('garden-reveal');
+
+                resultStep.classList.remove('hidden');
+                setTimeout(() => {
+                    resultStep.classList.remove('opacity-0', 'scale-95');
+                    resultStep.classList.add('opacity-100', 'scale-100');
+                }, 50);
+
+            }, 400);
+        }
+
+        // HÀM VẼ CÀNH CÂY VÀ LÁ CHO ĐÓA HOA
+        function drawStemAndLeaves(ctx, startX, startY, endX, endY, stemWidth = 8, leafScale = 1.0) {
+            ctx.save();
+            
+            // Vẽ thân hoa mềm mại (Bezier Curve)
+            const midX = (startX + endX) / 2 + (startX < 540 ? -40 : 40);
+            const midY = (startY + endY) / 2;
+
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.quadraticCurveTo(midX, midY, endX, endY);
+            
+            const stemGrad = ctx.createLinearGradient(startX, startY, endX, endY);
+            stemGrad.addColorStop(0, '#1E5E20');
+            stemGrad.addColorStop(0.5, '#2E7D32');
+            stemGrad.addColorStop(1, '#4CAF50');
+
+            ctx.strokeStyle = stemGrad;
+            ctx.lineWidth = stemWidth;
+            ctx.lineCap = 'round';
+            ctx.shadowColor = 'rgba(0,0,0,0.3)';
+            ctx.shadowBlur = 6;
+            ctx.stroke();
+
+            // Vẽ lá xanh mọc trên thân
+            const drawLeafOnStem = (t, isLeft) => {
+                // Tính điểm trên đường cong Bezier
+                const lx = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * midX + t * t * endX;
+                const ly = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * midY + t * t * endY;
+
+                ctx.save();
+                ctx.translate(lx, ly);
+                const angle = (isLeft ? -1 : 1) * 0.7 - (startX < 540 ? 0.2 : -0.2);
+                ctx.rotate(angle);
+                ctx.scale(leafScale, leafScale);
+
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.quadraticCurveTo(isLeft ? -35 : 35, -25, isLeft ? -50 : 50, -50);
+                ctx.quadraticCurveTo(isLeft ? -20 : 20, 10, 0, 0);
+
+                const leafGrad = ctx.createLinearGradient(0, 0, isLeft ? -50 : 50, -50);
+                leafGrad.addColorStop(0, '#15803D');
+                leafGrad.addColorStop(1, '#4ADE80');
+
+                ctx.fillStyle = leafGrad;
+                ctx.shadowColor = 'rgba(0,0,0,0.2)';
+                ctx.shadowBlur = 4;
+                ctx.fill();
+                ctx.restore();
+            };
+
+            // Tạo 2 chiếc lá hai bên thân
+            drawLeafOnStem(0.4, true);
+            drawLeafOnStem(0.65, false);
+
+            ctx.restore();
+        }
+
+        // HÀM HỖ TRỢ VẼ MỘT BÔNG HOA HOÀN CHỈNH VỚI CHÂN DUNG LÀM NHỤY
+        function drawSingleFlowerWithAvatar(ctx, cx, cy, flowerRadius, scaleFactor = 1) {
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.scale(scaleFactor, scaleFactor);
+
+            // 1. Vẽ các lớp cánh hoa bao quanh
+            const theme = FLOWER_THEME;
+            const drawPetals = (count, len, wid, c0, c1) => {
+                const angleStep = (Math.PI * 2) / count;
+                for (let i = 0; i < count; i++) {
+                    const angle = i * angleStep;
+                    ctx.save();
+                    ctx.rotate(angle);
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-wid*1.2, -len*0.3, -wid, -len*0.8, 0, -len);
+                    ctx.bezierCurveTo(wid, -len*0.8, wid*1.2, -len*0.3, 0, 0);
+                    
+                    const grad = ctx.createLinearGradient(0, 0, 0, -len);
+                    grad.addColorStop(0, c0);
+                    grad.addColorStop(1, c1);
+                    ctx.fillStyle = grad;
+                    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                    ctx.shadowBlur = 8;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            };
+
+            drawPetals(14, flowerRadius * 1.3, flowerRadius * 0.45, theme.petals[3], theme.petals[1]);
+            drawPetals(10, flowerRadius * 0.95, flowerRadius * 0.4, theme.petals[1], theme.accent);
+
+            // 2. Vẽ nhụy hoa là ảnh chân dung được cắt tròn
+            const avatarRadius = flowerRadius * 0.55;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(0, 0, avatarRadius, 0, Math.PI * 2);
+            ctx.clip();
+
+            if (state.avatarImg) {
+                const t = document.createElement('canvas'); t.width = 300; t.height = 300;
+                const tc = t.getContext('2d');
+                const asp = state.avatarImg.width / state.avatarImg.height;
+                const dw = 300 * state.cropScale, dh = (300 / asp) * state.cropScale;
+                tc.drawImage(state.avatarImg, (300 - dw) / 2 + state.cropX, (300 - dh) / 2 + state.cropY, dw, dh);
+                ctx.drawImage(t, -avatarRadius, -avatarRadius, avatarRadius * 2, avatarRadius * 2);
+            } else {
+                const g = ctx.createRadialGradient(0, 0, 5, 0, 0, avatarRadius);
+                g.addColorStop(0, '#FFE29F'); g.addColorStop(1, theme.primary);
+                ctx.fillStyle = g; ctx.fillRect(-avatarRadius, -avatarRadius, avatarRadius * 2, avatarRadius * 2);
+            }
+            ctx.restore();
+
+            // Viền vàng lấp lánh cho nhụy
+            ctx.strokeStyle = '#FBBF24';
+            ctx.lineWidth = 4;
+            ctx.shadowColor = '#F59E0B';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(0, 0, avatarRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // MASTER ARTWORK CANVAS RENDERER (1080x1080 Resolution)
+        function renderMasterArtwork() {
+            const ctx = artCtx, size = 1080, c = size / 2;
+
+            // 1. Bầu trời, mây, mặt trời & thảm cỏ nền
+            drawGardenBack(ctx, size);
+
+            // 2. VẼ THÂN CÀNH LÁ NỐI TỪ ĐẤT LÊN CHO TẤT CẢ BÔNG HOA
+            const groundY = 880; // Cao độ mặt đất nơi gốc cây vươn lên
+            drawStemAndLeaves(ctx, c, groundY, c, 520, 14, 1.3);            // Hoa chính giữa
+            drawStemAndLeaves(ctx, c - 280, groundY, c - 240, 380, 10, 1.0); // Hoa trái trên
+            drawStemAndLeaves(ctx, c + 280, groundY, c + 240, 380, 10, 1.0); // Hoa phải trên
+            drawStemAndLeaves(ctx, c - 380, groundY, c - 320, 620, 8, 0.8);  // Hoa trái giữa
+            drawStemAndLeaves(ctx, c + 380, groundY, c + 320, 620, 8, 0.8);  // Hoa phải giữa
+            drawStemAndLeaves(ctx, c - 160, groundY, c - 120, 700, 7, 0.7);  // Hoa trái dưới
+            drawStemAndLeaves(ctx, c + 160, groundY, c + 120, 700, 7, 0.7);  // Hoa phải dưới
+
+            // 3. VẼ CÁC BÔNG HOA VỚI NHỤY LÀ ẢNH CHÂN DUNG
+            drawSingleFlowerWithAvatar(ctx, c, 520, 160, 1.25);
+            drawSingleFlowerWithAvatar(ctx, c - 240, 380, 110, 0.9);
+            drawSingleFlowerWithAvatar(ctx, c + 240, 380, 110, 0.9);
+            drawSingleFlowerWithAvatar(ctx, c - 320, 620, 95, 0.75);
+            drawSingleFlowerWithAvatar(ctx, c + 320, 620, 95, 0.75);
+            drawSingleFlowerWithAvatar(ctx, c - 120, 700, 85, 0.65);
+            drawSingleFlowerWithAvatar(ctx, c + 120, 700, 85, 0.65);
+
+            // 4. Khu vườn phía trước: cỏ tiền cảnh, bướm bay lượn
+            drawGardenFront(ctx, size);
+
+            // 5. TIÊU ĐỀ & LỜI CHÚC PHÍA DƯỚI
+            ctx.textAlign = 'center';
+            ctx.font = '600 26px "Be Vietnam Pro"';
+            ctx.fillStyle = '#9F1239';
+            ctx.shadowColor = 'rgba(255,255,255,0.9)'; ctx.shadowBlur = 10;
+            ctx.fillText('HAPPY VIETNAMESE WOMEN\'S DAY • 20/10', c, 80);
+            ctx.shadowBlur = 0;
+
+            // Khung mờ phía sau chữ tên
+            ctx.fillStyle = 'rgba(16, 70, 30, 0.55)';
+            ctx.beginPath();
+            if (ctx.roundRect) ctx.roundRect(140, 870, 800, 155, 40); else ctx.rect(140, 870, 800, 155);
+            ctx.fill();
+
+            ctx.font = '700 56px "Pacifico"';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.6)'; ctx.shadowBlur = 12;
+            ctx.fillText(`Thân tặng ${state.recipientName}`, c, 940, 740);
+            
+            ctx.font = '500 24px "Be Vietnam Pro"';
+            ctx.fillStyle = '#FFF1F2';
+            ctx.fillText('Rực rỡ & Tỏa sáng như những đóa hoa!', c, 992);
+            ctx.shadowBlur = 0;
+        }
+
+        /* ================= KHU VƯỜN HOA & CẢNH QUAN ================= */
+        function seeded(s) { return () => (s = s * 16807 % 2147483647) / 2147483647; }
+
+        function cloud(c, x, y, s) {
+            c.save(); c.translate(x, y);
+            c.fillStyle = 'rgba(255,255,255,0.93)'; c.shadowColor = 'rgba(110,160,215,0.45)'; c.shadowBlur = 22;
+            [[0, 0, 38], [42, -16, 48], [92, 0, 38], [44, 14, 42], [-30, 12, 28], [120, 12, 28]].forEach(([dx, dy, r]) => {
+                c.beginPath(); c.arc(dx * s, dy * s, r * s, 0, 7); c.fill();
+            });
+            c.restore();
+        }
+
+        function hill(c, S, base, c0, c1, f, amp, ph) {
+            const g = c.createLinearGradient(0, base - amp, 0, base + 220);
+            g.addColorStop(0, c0); g.addColorStop(1, c1);
+            c.beginPath(); c.moveTo(0, S);
+            for (let x = 0; x <= S; x += 20) c.lineTo(x, base + amp * Math.sin(x * f + ph));
+            c.lineTo(S, S); c.closePath(); c.fillStyle = g; c.fill();
+        }
+
+        function blades(c, S, R, n, y0, y1) {
+            c.lineCap = 'round'; c.lineWidth = 2.4;
+            for (let i = 0; i < n; i++) {
+                const x = R() * S, y = y0 + R() * (y1 - y0), h = 8 + (y - 760) / 9 * R();
+                c.strokeStyle = ['#3E9B33', '#5DB644', '#2F7D2B', '#7FCB57'][Math.floor(R() * 4)];
+                c.beginPath(); c.moveTo(x, y); c.lineTo(x + (R() - 0.5) * 9, y - h); c.stroke();
+            }
+        }
+
+        function butterfly(c, x, y, s, col, rot) {
+            c.save(); c.translate(x, y); c.rotate(rot); c.fillStyle = col; c.shadowColor = 'rgba(0,0,0,0.2)'; c.shadowBlur = 6;
+            [-1, 1].forEach(d => {
+                c.beginPath(); c.ellipse(d * 14 * s, -8 * s, 14 * s, 10 * s, d * 0.5, 0, 7); c.fill();
+                c.beginPath(); c.ellipse(d * 10 * s, 9 * s, 9 * s, 7 * s, -d * 0.5, 0, 7); c.fill();
+            });
+            c.fillStyle = '#3A2A2A'; c.fillRect(-1.5 * s, -14 * s, 3 * s, 28 * s); c.restore();
+        }
+
+        function drawGardenBack(c, S) {
+            const R = seeded(2010);
+            let g = c.createLinearGradient(0, 0, 0, S * 0.72);
+            g.addColorStop(0, '#3A9CF2'); g.addColorStop(0.55, '#8FD3FF'); g.addColorStop(1, '#FFF3C4');
+            c.fillStyle = g; c.fillRect(0, 0, S, S);
+
+            const sx = 125, sy = 195;
+            g = c.createRadialGradient(sx, sy, 0, sx, sy, 460);
+            g.addColorStop(0, 'rgba(255,250,200,0.95)'); g.addColorStop(0.15, 'rgba(255,236,150,0.6)'); g.addColorStop(1, 'rgba(255,236,150,0)');
+            c.fillStyle = g; c.fillRect(0, 0, S, S);
+            c.save(); c.translate(sx, sy);
+            for (let i = 0; i < 14; i++) {
+                c.rotate(Math.PI * 2 / 14);
+                const rg = c.createLinearGradient(0, 0, 0, 1000);
+                rg.addColorStop(0, 'rgba(255,248,200,0.3)'); rg.addColorStop(1, 'rgba(255,248,200,0)');
+                c.fillStyle = rg; c.beginPath(); c.moveTo(-14, 0); c.lineTo(14, 0); c.lineTo(80, 1000); c.lineTo(-80, 1000); c.fill();
+            }
+            c.restore();
+            c.beginPath(); c.arc(sx, sy, 58, 0, 7); c.fillStyle = '#FFF8C9'; c.shadowColor = '#FFD54A'; c.shadowBlur = 70; c.fill(); c.shadowBlur = 0;
+
+            cloud(c, 640, 215, 0.9); cloud(c, 880, 150, 0.7); cloud(c, 300, 330, 0.75);
+
+            hill(c, S, 690, '#B5E08B', '#8CCB63', 0.006, 26, 1);
+            hill(c, S, 735, '#8FD16A', '#5FB447', 0.005, 22, 3);
+            hill(c, S, 780, '#6CC24A', '#2E7D2F', 0.008, 10, 0);
+            blades(c, S, R, 240, 770, 1080);
+        }
+
+        function drawGardenFront(c, S) {
+            const R = seeded(1204);
+            blades(c, S, R, 120, 960, 1080);
+            butterfly(c, 885, 560, 1.0, '#FF8A65', 0.3);
+            butterfly(c, 205, 610, 0.8, '#B388FF', -0.4);
+            butterfly(c, 960, 400, 0.7, '#FFD54F', 0.2);
+        }
+
+        function initFallingPetals() {
+            const canvas = document.getElementById('falling-petals-canvas');
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const petalsCount = 30;
+            const petals = [];
+
+            for (let i = 0; i < petalsCount; i++) {
+                petals.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 12 + 10,
+                    speedY: Math.random() * 1.5 + 0.8,
+                    oscSpeed: Math.random() * 0.02 + 0.01,
+                    oscAmp: Math.random() * 2 + 1,
+                    angle: Math.random() * Math.PI * 2,
+                    rotSpeed: Math.random() * 0.03 - 0.015,
+                    color: ['#FB7185', '#F43F5E', '#FDA4AF', '#FECDD3'][Math.floor(Math.random() * 4)]
+                });
+            }
+
+            let step = 0;
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                step += 0.02;
+
+                petals.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += Math.sin(step * p.oscAmp) * 0.8;
+                    p.angle += p.rotSpeed;
+
+                    if (p.y > canvas.height + 20) {
+                        p.y = -20;
+                        p.x = Math.random() * canvas.width;
+                    }
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.angle);
+                    ctx.scale(Math.sin(step + p.angle), 1);
+
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-p.size/2, -p.size/2, -p.size, p.size/3, 0, p.size);
+                    ctx.bezierCurveTo(p.size, p.size/3, p.size/2, -p.size/2, 0, 0);
+                    ctx.fill();
+
+                    ctx.restore();
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function downloadArtwork() {
+            const link = document.createElement('a');
+            link.download = `hoa-20-10-${state.recipientName || 'tang-ban'}.png`;
+            link.href = artCanvas.toDataURL('image/png', 1.0);
+            link.click();
+            showToast('Đã tải ảnh chúc mừng 1080p sắc nét!');
+        }
+
+        async function shareArtwork() {
+            if (navigator.share && artCanvas.toBlob) {
+                artCanvas.toBlob(async (blob) => {
+                    const file = new File([blob], 'hoa-20-10.png', { type: 'image/png' });
+                    try {
+                        await navigator.share({
+                            title: 'Chúc Mừng Ngày 20/10',
+                            text: `Gửi tặng ${state.recipientName} lời chúc mừng 20/10 ý nghĩa nhất!`,
+                            files: [file]
+                        });
+                    } catch (err) {
+                        showToast('Đã sao chép link / hình ảnh!');
+                    }
+                });
+            } else {
+                downloadArtwork();
+            }
+        }
+
+        function resetSetup() {
+            const setupStep = document.getElementById('step-setup');
+            const resultStep = document.getElementById('step-result');
+
+            resultStep.classList.remove('opacity-100', 'scale-100');
+            resultStep.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                resultStep.classList.add('hidden');
+                setupStep.classList.remove('hidden');
+                setTimeout(() => {
+                    setupStep.classList.remove('opacity-0', 'scale-95');
+                }, 50);
+            }, 400);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
